@@ -6,9 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class Register extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
@@ -24,18 +21,19 @@ class Register extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'unique:users'],
-            'phone' => ['required', 'string', 'numeric',  'unique:users'],
+            'phone' => ['required', 'string', 'numeric', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ];
     }
+
     public function attributes()
     {
-        return[
-            'name' => trans('main.name'),
-            'email' => trans('main.email'),
-            'phone' => trans('main.phone'),
-            'password' => trans('main.password'),
-            'password_confirmation' => trans('main.password_confirmation'),
+        return [
+            'name' => __('auth.name'),
+            'email' => __('auth.email'),
+            'phone' => __('auth.phone'),
+            'password' => __('auth.password'),
+            'password_confirmation' => __('auth.password_confirmation'),
         ];
 
     }

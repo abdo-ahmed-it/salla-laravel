@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Login;
 use App\Http\Requests\Register;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
-class AuthController extends Controller
+class AuthController extends BaseController
 {
 
     public function __construct()
@@ -30,11 +31,9 @@ class AuthController extends Controller
 
         auth()->login($user);
         $token = $user->createToken('token')->plainTextToken;
-        return response()->json([
-            'message' => 'Register successful',
-            'user' => $user,
-            'token' => $token,
-        ]);
+        return $this->sendSuccess(
+            __('auth.register_success'),
+            ['token' => $token, 'user' => new UserResource($user),]);
     }
 
 
@@ -46,19 +45,19 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = auth()->user();
             $token = $user->createToken('token')->plainTextToken;
-            return response()->json([
-                'message' => 'Login successful',
-                'token' => $token,
-                'user' => $user,
-
-            ]);
+            return $this->sendSuccess(
+                __('auth.login_success'),
+                ['token' => $token, 'user' => new UserResource($user),]);
         }
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
     public function profile()
     {
-        return response()->json(auth()->user());
+        return $this->sendSuccess(
+            __('auth.profile_success'),
+            ['user' => new UserResource(auth()->user())],
+        );
     }
 
     public function logout()
