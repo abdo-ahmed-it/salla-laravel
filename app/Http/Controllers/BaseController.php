@@ -18,8 +18,11 @@ class BaseController extends Controller
     {
         $response = [
             'success' => false,
-            'errors' => $error
+            'message' => is_array($error) ? $error[0] : $error,
         ];
+        if (is_array($error)) {
+            $response['errors'] = $error;
+        }
         if (!empty($errorMessages)) {
             $response['data'] = $errorMessages;
         }
